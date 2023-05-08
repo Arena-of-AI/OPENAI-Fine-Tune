@@ -3,7 +3,7 @@ requests
 streamlit
 streamlit-lottie
 streamlit-webrtc
-openai==0.27.6
+openai>=0.27.6
 streamlit-chat 
 jsonlines
 openpyxl
