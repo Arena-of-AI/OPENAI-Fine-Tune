@@ -1,27 +1,33 @@
 import streamlit as st
+import openai
 import pandas as pd
-import json
+import jsonlines
 
-def excel_to_jsonl(file):
-    # 讀取Excel檔案，並將數據轉換為DataFrame格式
-    data = pd.read_excel(file)
+# 設定OpenAI API Key
+openai.api_key = st.text_input("請輸入OpenAI API Key：")
 
-    # 將DataFrame轉換為JSON格式
-    json_data = json.loads(data.to_json(orient='records'))
+# 檢查API Key是否有效
+try:
+    models = openai.Model.list()
+except Exception as e:
+    st.error(f"無法連接OpenAI API，請檢查API Key是否正確：{e}")
+    st.stop()
 
-    # 將JSON格式寫入JSONL文件
-    with open('data.jsonl', 'w', encoding='utf-8') as f:
-        for record in json_data:
-            f.write(json.dumps(record, ensure_ascii=False) + '\n')
+# 上傳檔案
+uploaded_file = st.file_uploader("上傳Excel檔案", type=["xlsx"])
 
-# 主要程式碼
-st.title('Training Data Converter')
+# 轉換格式
+if uploaded_file is not None:
+    st.text("格式轉換中...")
+    try:
+        # 讀取Excel檔案
+        df = pd.read_excel(uploaded_file)
 
-# 讓使用者上傳Excel檔案
-uploaded_file = st.file_uploader('Upload Training Data', type=['xlsx'])
-
-# 如果有上傳檔案，則進行格式轉換
-if uploaded_file:
-    st.write('Converting file...')
-    excel_to_jsonl(uploaded_file)
-    st.write('File conversion completed!')
+        # 將每一行轉換成JSONL格式
+        with jsonlines.open("training_data.jsonl", mode="w") as writer:
+            for index, row in df.iterrows():
+                writer.write({"text": row["text"], "label": row["label"]})
+        
+        st.success("檔案轉換已完成")
+    except Exception as e:
+        st.error(f"轉換檔案時發生錯誤：{e}")
