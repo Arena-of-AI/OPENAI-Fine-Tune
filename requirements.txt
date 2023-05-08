@@ -6,3 +6,4 @@ streamlit-webrtc
 openai
 streamlit-chat 
 jsonlines
+openpyxl
