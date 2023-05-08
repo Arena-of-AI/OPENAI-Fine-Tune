@@ -13,6 +13,21 @@ except Exception as e:
     st.error(f"無法連接OpenAI API，請檢查API Key是否正確：{e}")
     st.stop()
 
+
+# 設置好fine-tune的相關參數
+fine_tune_config = {
+    "train_file": "path/to/train_data.jsonl",
+    "validation_file": "path/to/validation_data.jsonl",
+    "output_directory": "path/to/output_directory",
+    "model": "text-davinci-002",
+    "num_epochs": 5,
+    "batch_size": 16,
+    "learning_rate": 1e-5
+}
+
+# 調用prepare_data來轉換訓練數據的格式
+openai.FineTune.prepare_data(**fine_tune_config)
+
 # 讓使用者上傳自己的training data（使用excel格式）
 uploaded_file = st.file_uploader("Upload Excel File", type=["xlsx"])
 
