@@ -1,0 +1,7 @@
+bokeh
+requests
+streamlit
+streamlit-lottie
+streamlit-webrtc
+openai
+streamlit-chat 
