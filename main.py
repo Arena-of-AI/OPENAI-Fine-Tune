@@ -29,5 +29,6 @@ if uploaded_file is not None:
                 writer.write({"text": row["text"], "label": row["label"]})
         
         st.success("檔案轉換已完成")
+        st.download_button(label="Download jsonl", data=jsonl, file_name="training_data.jsonl", mime="application/jsonl")
     except Exception as e:
         st.error(f"轉換檔案時發生錯誤：{e}")
